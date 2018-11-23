@@ -1,3 +1,9 @@
+UPDATE Contract c
+	SET c.contractLength=FLOOR(RAND()*(24-1+1))+1;
+    
+UPDATE DataEvent d
+	SET d.usageData= ROUND(((RAND()*(5-1+1))+1), 2);
+
 #set monthly fee in statement based on plan
 UPDATE	Statement s
 	INNER JOIN Plan p ON s.planID = p.planID
@@ -7,14 +13,6 @@ UPDATE	Statement s
 	SET		s.monthlyFee = (tp.textFee + mp.minFee + dp.dataFee)
 	WHERE	s.monthlyFee = '0';
     
-    
-    
-SELECT p.phoneID, SUM(me.numberMin)
-FROM Phone p, PhoneEvent pe, MinEvent me 
-WHERE p.idNo = pe.idNo
-AND me.eventNo = pe.eventNo
-GROUP BY p.phoneID;
-
 SELECT * FROM Statement;    
 
 #set current number of texts for phone based on phone events
@@ -60,6 +58,7 @@ UPDATE Statement s
 
 SELECT * FROM Statement;
     
+#Calculate transactions based off of monthly fee and overcharge fee
 UPDATE Transactions t
 	INNER JOIN Payment p ON t.methodID = p.methodID
 	INNER JOIN Contract c ON p.idNo = c.idNo
@@ -67,3 +66,5 @@ UPDATE Transactions t
 	SET t.transAmount = (s.monthlyFee + s.overChargeFee);
     
 SELECT * FROM Transactions;
+    
+SELECT * FROM Contract;
