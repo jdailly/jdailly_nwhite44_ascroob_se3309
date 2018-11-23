@@ -1,3 +1,5 @@
+#View 1
+#Service Providers can only view information for their customers
 CREATE VIEW Provider1Customer 
 AS SELECT * 
 FROM Customer
@@ -7,9 +9,6 @@ CREATE VIEW Provider2Customer
 AS SELECT * 
 FROM Customer
 WHERE ServiceProviderID = 2;
-
-
-SELECT * FROM Provider2Customer;
 
 CREATE VIEW Provider3Customer 
 AS SELECT * 
@@ -36,20 +35,29 @@ AS SELECT *
 FROM Customer
 WHERE ServiceProviderID = 7;
 
-
+#View 2
+#Return Customer & contract information for each client
 CREATE VIEW CustomerViewContract
-As Select *
-From Contract
-WHERE idNo = 10034;
+As Select cu.idNo, cu.clientName, co.contractID, co.contractLength, cp.serviceProviderID
+From Contract co, Customer cu, CellProviderCompany cp
+WHERE cu.idNo = co.idNo
+AND cp.serviceProviderID = cu.serviceProviderID
+GROUP BY cu.idNo;
 
 SELECT * FROM CustomerViewContract;
 
 DROP VIEW CustomerViewContract;
 
+#View 3
+#Return Customer monthly statement
+CREATE VIEW CustomerMonthlyStatement
+AS SELECT c.idNo, s.startDate, s.endDate, s.monthlyFee, s.overChargeFee, t.transAmount
+FROM Customer c, Statement s, Transactions t, Contract co, Payment p
+WHERE c.idNo = co.idNo
+AND co.contractID = s.contractID
+AND c.idNo = p.idNo
+AND p.methodID= t.methodID
+GROUP BY c.idNo;
 
-CREATE VIEW CustomerPayment
-AS SELECT * 
-FROM Payment
-WHERE idNo = 10034;
-
-SELECT * FROM CustomerPayment;
+DROP VIEW CustomerMonthlyStatement;
+SELECT * FROM CustomerMonthlyStatement;
