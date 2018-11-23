@@ -1,6 +1,7 @@
+#Insert 1
 INSERT INTO CellProviderCompany VALUES ('1000', 'jdailly', 'se3309');
 
-
+#Insert 2
 INSERT INTO Customer VALUES ('00001', 'Nick White', '123 Main St', 'nwhite44@uwo.ca', '1997-01-01', '2018-01-01', 
 	(SELECT (serviceProviderID) 
     FROM CellProviderCompany
@@ -10,7 +11,8 @@ INSERT INTO Contract VALUES ('10001',
 	(SELECT (idNo)
     FROM Customer
     WHERE clientName = 'Nick White'), '3');
-    
+
+#Insert 3 (needs values from previous insert)
 INSERT INTO Payment VALUES ('1',
 	(SELECT (idNo)
     FROM Contract

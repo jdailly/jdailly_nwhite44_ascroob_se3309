@@ -35,6 +35,9 @@ AS SELECT *
 FROM Customer
 WHERE ServiceProviderID = 7;
 
+SELECT * FROM Provider1Customer;
+DROP VIEW Provider1Customer;
+
 #View 2
 #Return Customer & contract information for each client
 CREATE VIEW CustomerViewContract
@@ -61,3 +64,23 @@ GROUP BY c.idNo;
 
 DROP VIEW CustomerMonthlyStatement;
 SELECT * FROM CustomerMonthlyStatement;
+
+#Test views with queries
+SELECT p1c.idNo, clientName, clientEmail, contractLength
+FROM Provider1Customer p1c
+INNER Join Contract co ON p1c.idNo = co.idNo
+WHERE co.contractLength < 2
+GROUP BY p1c.idNo;
+
+#Trying to modify a view
+INSERT INTO Provider1Customer
+VALUES (99999, 'Test Name', '123 Main St, London', 'modify@example.com', '1990-01-03', '2018-03-04', 2);
+
+SELECT * FROM Provider1Customer WHERE idNo = 99999;
+
+SELECT * FROM Customer WHERE idNo = 99999;
+
+DELETE FROM Customer WHERE idNo = 99999;
+
+#Modifying a view connected to multiple relations
+INSERT INTO CustomerMonthlyStatement VALUES (99999, '2018-01-01', '2018-02-01', 15, 0, 15);
