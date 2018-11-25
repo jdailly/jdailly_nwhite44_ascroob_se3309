@@ -59,11 +59,13 @@ UPDATE Statement s
 SELECT * FROM Statement;
     
 #Calculate transactions based off of monthly fee and overcharge fee
+#each day that a customer is out of the country, a $5 charge is added
 UPDATE Transactions t
 	INNER JOIN Payment p ON t.methodID = p.methodID
 	INNER JOIN Contract c ON p.idNo = c.idNo
 	INNER JOIN Statement s ON s.contractID = c.contractID
-	SET t.transAmount = (s.monthlyFee + s.overChargeFee);
+    INNER JOIN Phone ph ON c.idNo = ph.idNo
+	SET t.transAmount = (s.monthlyFee + s.overChargeFee + 5*(ph.daysOut));
     
 SELECT * FROM Transactions;
     
